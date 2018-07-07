@@ -15,7 +15,13 @@ class UserController {
             //Disable the submit button
             btn.disabled = true;
             let values = this.getValues();
+
+            if (!values) {
+                return false;
+            }
+
             values.photo = '';
+
             this.getPhoto().then(content => {
                 values.photo = content;
                 this.addLine(values);
@@ -29,8 +35,15 @@ class UserController {
 
     getValues() {
         let user = {};
+        let isValid = true;
 
         [...this.formEl.elements].forEach(function (field) {
+
+            //Verify required fields
+            if (['name', 'email', 'password'].indexOf(field.name) > -1 && !field.value) {
+                field.parentElement.classList.add('has-error');
+                isValid = false;
+            }
 
             //Radio element
             if (field.name == 'gender' && field.checked) {
@@ -44,6 +57,10 @@ class UserController {
             }
 
         });
+
+        if (!isValid) {
+            return false;
+        }
 
         return new User(user.name, user.gender, user.birth, user.country, user.email, user.password, user.photo, user.admin);
 
@@ -79,6 +96,9 @@ class UserController {
 
     addLine(dataUser) {
         let tr = document.createElement('tr');
+
+        tr.dataset.user = JSON.stringify(dataUser);
+
         tr.innerHTML =
             `<td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
             <td>${dataUser.name}</td>
@@ -92,5 +112,26 @@ class UserController {
             `;
 
         this.tableEl.appendChild(tr);
+
+        this.updateCount();
+    }
+
+    updateCount() {
+        let numberUsers = 0;
+        let numberAdmin = 0;
+
+        [...this.tableEl.children].forEach(tr => {
+
+            let user = JSON.parse(tr.dataset.user);
+
+            if (user._admin) {
+                numberAdmin++;
+            }
+
+            numberUsers++;
+        });
+
+        document.querySelector('#number-users').innerHTML = numberUsers;
+        document.querySelector('#number-users-admin').innerHTML = numberAdmin;
     }
 }
