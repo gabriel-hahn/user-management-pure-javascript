@@ -24,7 +24,7 @@ eggs
 parts
 tmp
 .sass-cache
-node_modules
+app/node_modules
 
 src/website/settingslocal.py
 stunnel.log
