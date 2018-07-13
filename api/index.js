@@ -1,12 +1,11 @@
-const http = require('http');
+const express = require('express');
+const consign = require('consign');
 
-let server = http.createServer((req, res) => {
-    console.log('URL: ' + req.url);
-    console.log('METHOD: ' + req.method);
+let app = express();
 
-    res.end('OK');
-});
+//App into all the routes.
+consign().include('routes').into(app);
 
-server.listen(3000, '127.0.0.1', () => {
+app.listen(3000, '127.0.0.1', () => {
     console.log('Servidor funcionando!');
 });
