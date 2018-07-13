@@ -1,25 +1,47 @@
+let NeDB = require('nedb');
+let db = new NeDB({
+    filename: 'users.db',
+    autoload: true
+});
+
 module.exports = app => {
-    app.get('/users', (req, res) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json({
-            users: [{
-                name: 'Gabriel Hahn Schaeffer',
-                email: 'gabriel_hahn@hotmailcom',
-                id: 1
-            }]
+
+    let route = app.route('/users');
+    let routeId = app.route('/users/:id');
+
+    routeId.get((req, res) => {
+        db.findOne({ _id: req.params.id }).exec((err, user) => {
+            if (err) {
+                app.utils.error.send(err, req, res);
+            }
+            else {
+                res.status(200).json(user);
+            }
         });
     });
 
-    app.get('/users/admin', (req, res) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json({
-            users: [{
-                name: 'Admin',
-                email: 'gabriel_hahn@hotmailcom',
-                id: 2
-            }]
+    //Get all users
+    route.get((req, res) => {
+        db.find({}).sort({ name: 1 }).exec((err, users) => {
+            if (err) {
+                app.utils.error.send(err, req, res);
+            }
+            else {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json({ users });
+            }
+        });
+    });
+
+    route.post((req, res) => {
+        db.insert(req.body, (err, user) => {
+            if (err) {
+                app.utils.error.send(err, req, res);
+            }
+            else {
+                res.status(200).json(user);
+            }
         });
     });
 }
