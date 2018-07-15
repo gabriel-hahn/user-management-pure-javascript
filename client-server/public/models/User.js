@@ -107,14 +107,8 @@ class User {
         }
     }
 
-    static getUsersStorage() {
-        let users = [];
-
-        if (localStorage.getItem('users')) {
-            users = JSON.parse(localStorage.getItem('users'));
-        }
-
-        return users;
+    static getAll() {
+        return HttpRequest.get('/users');
     }
 
     toJSONDatabase() {
@@ -150,14 +144,6 @@ class User {
     }
 
     remove() {
-        let users = User.getUsersStorage();
-
-        users.forEach((userData, index) => {
-            if (this._id == userData._id) {
-                users.splice(index, 1);
-            }
-        });
-
-        localStorage.setItem('users', JSON.stringify(users));
+        return HttpRequest.delete(`/users/${this.id}`);
     }
 }
