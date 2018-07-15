@@ -19,7 +19,7 @@ class HttpRequest {
     static request(method, url, params = {}) {
 
         return new Promise((resolve, reject) => {
-            
+
             let ajax = new XMLHttpRequest();
 
             ajax.open(method.toUpperCase(), url);
@@ -41,7 +41,9 @@ class HttpRequest {
                 resolve(obj);
             };
 
-            ajax.send();
+            ajax.setRequestHeader('Content-type', 'application/json');
+
+            ajax.send(JSON.stringify(params));
         });
     }
 }
