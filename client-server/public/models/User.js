@@ -108,7 +108,7 @@ class User {
     }
 
     static getAll() {
-        return HttpRequest.get('/users');
+        return Fetch.get('/users');
     }
 
     toJSONDatabase() {
