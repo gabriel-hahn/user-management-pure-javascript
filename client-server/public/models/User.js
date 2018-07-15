@@ -117,17 +117,7 @@ class User {
         return users;
     }
 
-    getNewID() {
-        let userId = parseInt(localStorage.getItem('userId'));
-        if (!userId > 0) {
-            userId = 0;
-        }
-        userId++;
-        localStorage.setItem('userId', userId);
-        return userId;
-    }
-
-    toJSON() {
+    toJSONDatabase() {
         let json = {};
 
         Object.keys(this).forEach(key => {
@@ -144,10 +134,10 @@ class User {
             let promise;
 
             if (this.id) {
-                promise = HttpRequest.put(`/users/${this.id}`, this.toJSON());
+                promise = HttpRequest.put(`/users/${this.id}`, this.toJSONDatabase());
             }
             else {
-                promise = HttpRequest.put('/users/', this.toJSON());
+                promise = HttpRequest.post('/users/', this.toJSONDatabase());
             }
 
             promise.then(data => {
