@@ -12,6 +12,6 @@ app.use(expressValidator());
 //App into all the routes.
 consign().include('routes').include('utils').into(app);
 
-app.listen(3000, '127.0.0.1', () => {
-    console.log('Servidor funcionando!');
+app.listen(4000, '127.0.0.1', () => {
+    console.log('Servidor rodando!');
 });
